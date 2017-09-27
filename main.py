@@ -76,7 +76,7 @@ def ipcheck(string):
 		return
 	# check ip v4 available
 	legal_ip = []
-	string = list(string)
+	string = list(string.strip(' \n'))
 	print string
 	def recursive(now_index, now_string, legal_ip):
 		if len(now_string) == 4:
@@ -87,13 +87,18 @@ def ipcheck(string):
 		# traverse child
 		if len(now_string) == 3:
 			num = int(''.join(string[now_index:]))
-			if num < 256:
+			if len(str(num)) != len(string[now_index:]):
+				return	
+			if num < 256: 
 				now_string.append(str(num))
 				recursive(len(string)+1, now_string, legal_ip)
 				now_string.pop()
 		else:
 			for i in range(now_index, len(string)):
-				if int(''.join(string[now_index:i+1])) < 256:
+				num = int(''.join(string[now_index:i+1]))
+				if len(str(num)) != len(string[now_index:i+1]):
+					continue
+				if num < 256:
 					now_string.append(''.join(string[now_index:i+1]))
 					recursive(i+1, now_string, legal_ip)
 					now_string.pop()
@@ -152,4 +157,13 @@ def main():
 
 		
 if __name__ == "__main__":
+	#with open("test_in", "r") as f, open("test_out", "w") as fout:
+	#	for line in f:
+	#		try:
+	#			legal_ip = ipcheck(line)
+	#		except:
+	#			print(list(line))
+	#			exit()
+	#		for ip in legal_ip:
+	#			print >>fout, ip
 	main()
